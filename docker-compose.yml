@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: src/BirlikteMiniDemo.Api/Dockerfile
+    ports:
+      - "5000:80" # Uygulama 5000 portundan dış dünyaya açılır
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Server=db;Port=5432;Database=BirlikteMiniDemoDb;User Id=postgres;Password=yourpassword;
+    depends_on:
+      - db
+
+  db:
+    image: postgres:latest
+    container_name: birlikte-mini-demo-db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: yourpassword
+      POSTGRES_DB: BirlikteMiniDemoDb
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
